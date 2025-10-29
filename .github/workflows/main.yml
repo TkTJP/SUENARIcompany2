@@ -1,0 +1,27 @@
+name: Deploy to Lolipop 2025 Folder
+
+on:
+  push:
+    branches:
+      - main  # mainブランチにpushされたら実行
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Upload via FTP to Lolipop
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          local-dir: ./sato  # ← アップロードしたいフォルダ（リポジトリ全体 or dist など）
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
